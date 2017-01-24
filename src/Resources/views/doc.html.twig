@@ -266,10 +266,12 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
                                     <td>{{ package.version }}</td>
                                     <td>{{ package.license|join(', ') }}</td>
                                     <td>
-                                        <a href="{{ package.source.url }}">Source</a>
-                                        {% if package.homepage %}
-                                            <span class="text-gray-light">|</span>
-                                            <a href="{{ package.homepage }}">Homepage</a>
+                                        {% if package.source | length > 0 %}
+                                            <a href="{{ package.source.url }}">Source</a>
+                                            {% if package.homepage %}
+                                                <span class="text-gray-light">|</span>
+                                                <a href="{{ package.homepage }}">Homepage</a>
+                                            {% endif %}
                                         {% endif %}
                                     </td>
                                 </tr>
