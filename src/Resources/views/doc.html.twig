@@ -189,7 +189,7 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
                                 <tr>
                                     <th>Factory Service</th>
                                     <td>
-                                        {{ service.factory|length ? service.factory[0] ~ '::' ~ service.factory[1] ~ '()' ?? 'n/a' }}
+                                        {{ service.factory|length ? (service.factory[0].class ?? service.factory[0]) ~ '::' ~ service.factory[1] ~ '()' ?? 'n/a' }}
                                     </td>
                                 </tr>
                             </tbody>
