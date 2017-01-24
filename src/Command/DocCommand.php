@@ -24,6 +24,7 @@ class DocCommand extends ContainerAwareCommand
         $params['project_name'] = $this->getProjectName();
         $params['routes'] = $this->getRoutes();
         $params['services'] = $this->getServices();
+        $params['packages'] = $this->getPackages();
 
         $docPath = $this->getContainer()->getParameter('kernel.cache_dir').'/doc.html';
         file_put_contents($docPath, $this->getContainer()->get('twig')->render('@EasyDoc/doc.html.twig', $params));
@@ -93,5 +94,27 @@ class DocCommand extends ContainerAwareCommand
         }
 
         return $services;
+    }
+
+    private function getPackages()
+    {
+        $packages = array();
+
+        $composerLockPath = $this->getContainer()->getParameter('kernel.root_dir').'/../composer.lock';
+        if (!file_exists($composerLockPath)) {
+            return $packages;
+        }
+
+        $composerLockContents = json_decode(file_get_contents($composerLockPath), true);
+        foreach ($composerLockContents['packages'] as $packageConfig) {
+            $package = array();
+            foreach (array('name', 'description', 'version', 'license', 'homepage', 'type', 'source') as $key) {
+                $package[$key] = isset($packageConfig[$key]) ? $packageConfig[$key] : '';
+            }
+
+            $packages[] = $package;
+        }
+
+        return $packages;
     }
 }

@@ -132,7 +132,6 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
                     {% endfor %}
                 </section>
 
-
                 <section id="services">
                     <h1 class="page-title">Services</h1>
                     {% for service in services %}
@@ -248,10 +247,35 @@ html{font-family:sans-serif;-ms-text-size-adjust:100%;-webkit-text-size-adjust:1
 
                 <section id="licenses">
                     <h1 class="page-title">Licenses</h1>
-                    <div class="blankslate blankslate-spacious">
-                        <h3>This panel is not finished</h3>
-                        <p>Here you'll find all the information related to this panel.</p>
-                    </div>
+                    <p>These are the packages used by your application and their licenses.</p>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Package</th> <th>Version</th> <th>License</th> <th>Resources</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for package in packages %}
+                                <tr>
+                                    <td>
+                                        <span class="tooltipped tooltipped-n" aria-label="{{ package.description }}">
+                                            {{ package.name }}
+                                        </span>
+                                    </td>
+                                    <td>{{ package.version }}</td>
+                                    <td>{{ package.license|join(', ') }}</td>
+                                    <td>
+                                        <a href="{{ package.source.url }}">Source</a>
+                                        {% if package.homepage %}
+                                            <span class="text-gray-light">|</span>
+                                            <a href="{{ package.homepage }}">Homepage</a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </section>
             </div>
         </div>
