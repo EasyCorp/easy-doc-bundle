@@ -1,7 +1,7 @@
 EasyDoc
 =======
 
-# THIS IS AN EXPERIMENTAL PROOF OF CONCEPT
+# THIS IS AN EXPERIMENTAL PROOF OF CONCEPT - ISSUES PROPOSING IDEAS ARE WELCOME ... BUT WE CAN'T ACCEPT PULL REQUESTS YET.
 
 This bundle generates the formal documentation for Symfony applications. This
 documentation is a HTML document that contains detailed information about every
