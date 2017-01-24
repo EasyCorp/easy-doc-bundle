@@ -21,13 +21,28 @@ class DocCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $params['project_name'] = basename(dirname($this->getContainer()->getParameter('kernel.root_dir')));
+        $params['project_name'] = $this->getProjectName();
         $params['routes'] = $this->getRoutes();
         $params['services'] = $this->getServices();
 
         $docPath = $this->getContainer()->getParameter('kernel.cache_dir').'/doc.html';
         file_put_contents($docPath, $this->getContainer()->get('twig')->render('@EasyDoc/doc.html.twig', $params));
         $output->writeln(sprintf('[OK] The documentation was generated in %s', realpath($docPath)));
+    }
+
+    private function getProjectName()
+    {
+        $composerJsonPath = $this->getContainer()->getParameter('kernel.root_dir').'/../composer.json';
+        if (file_exists($composerJsonPath)) {
+            $composerJsonContents = json_decode(file_get_contents($composerJsonPath), true);
+            list($vendorName, $projectName) = explode('/', $composerJsonContents['name']);
+        } else {
+            $projectName = basename(dirname($this->getContainer()->getParameter('kernel.root_dir')));
+        }
+
+        $humanizedProjectName = ucwords(strtr($projectName, '_-', '  '));
+
+        return $humanizedProjectName;
     }
 
     private function getRoutes()
