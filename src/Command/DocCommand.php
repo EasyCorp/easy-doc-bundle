@@ -79,12 +79,13 @@ class DocCommand extends ContainerAwareCommand
         $services = array();
         foreach ($this->getContainer()->getServiceIds() as $serviceId) {
             $definition = $container->getDefinition($serviceId);
+            $isShared = method_exists($definition, 'isShared') ? $definition->isShared() : 'prototype' !== $definition->getScope();
             $service['id'] = $serviceId;
             $service['class'] = $definition->getClass() ?: '-';
             $service['public'] = $definition->isPublic() ? 'yes' : 'no';
             $service['synthetic'] = $definition->isSynthetic() ? 'yes' : 'no';
             $service['lazy'] = $definition->isLazy() ? 'yes' : 'no';
-            $service['shared'] = $definition->isShared() ? 'yes' : 'no';
+            $service['shared'] = $isShared ? 'yes' : 'no';
             $service['abstract'] = $definition->isAbstract() ? 'yes' : 'no';
             $service['tags'] = $definition->getTags();
             $service['method_calls'] = $definition->getMethodCalls();
