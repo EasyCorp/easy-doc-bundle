@@ -40,7 +40,11 @@ class AppKernel extends Kernel
 
         if (in_array($this->getEnvironment(), ['dev', 'test'])) {
             // ...
-            $bundles[] = new EasyCorp\Bundle\EasyDocBundle\EasyDocBundle();
+
+            if ('dev' === $this->getEnvironment()) {
+                // ...
+                $bundles[] = new EasyCorp\Bundle\EasyDocBundle\EasyDocBundle();
+            }
         }
     }
 
