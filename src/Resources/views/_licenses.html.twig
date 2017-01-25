@@ -1,0 +1,38 @@
+<h1 class="page-title">Licenses</h1>
+<p>These are the packages used by your application and their licenses.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="text-center">Used in</th>
+            <th>Package</th>
+            <th>Version</th>
+            <th>License</th>
+            <th>Resources</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for package in packages %}
+            <tr>
+                <td class="text-center">
+                    <span class="badge {{ package.is_dev ? '' : 'badge-prod' }}">{{ package.is_dev ? 'DEV' : 'PROD' }}</span>
+                </td>
+                <td>
+                    <span data-toggle="tooltip" data-placement="top" title="{{ package.description }}">
+                        {{ package.name }}
+                    </span>
+                </td>
+                <td>{{ package.version }}</td>
+                <td>{{ package.license|join(', ') }}</td>
+                <td>
+                    {% if package.source|length > 0 %}
+                        <a href="{{ package.source.url }}">Source</a>
+                    {% endif %}
+                    {% if package.homepage %}
+                        <a href="{{ package.homepage }}">Homepage</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

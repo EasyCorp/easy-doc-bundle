@@ -22,9 +22,12 @@ class DocCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $params['project_name'] = $this->getProjectName();
+        $params['easydoc_version'] = $this->getEasyDocVersion();
         $params['routes'] = $this->getRoutes();
         $params['services'] = $this->getServices();
         $params['packages'] = $this->getPackages();
+        $params['project_score'] = $this->getProjectScore($params);
+        $params['last_build_date'] = new \DateTime();
 
         $docPath = $this->getContainer()->getParameter('kernel.cache_dir').'/doc.html';
         file_put_contents($docPath, $this->getContainer()->get('twig')->render('@EasyDoc/doc.html.twig', $params));
@@ -44,6 +47,17 @@ class DocCommand extends ContainerAwareCommand
         $humanizedProjectName = ucwords(strtr($projectName, '_-', '  '));
 
         return $humanizedProjectName;
+    }
+
+    private function getEasyDocVersion()
+    {
+        foreach ($this->getPackages() as $package) {
+            if ('easycorp/easy-doc-bundle' === $package['name']) {
+                return $package['version'];
+            }
+        }
+
+        return 'v1.0.0';
     }
 
     private function getRoutes()
@@ -107,15 +121,40 @@ class DocCommand extends ContainerAwareCommand
         }
 
         $composerLockContents = json_decode(file_get_contents($composerLockPath), true);
-        foreach ($composerLockContents['packages'] as $packageConfig) {
+        $prodPackages = $this->processComposerPackagesInformation($composerLockContents['packages']);
+        $devPackages = $this->processComposerPackagesInformation($composerLockContents['packages-dev'], true);
+        $allPackages = array_merge($prodPackages, $devPackages);
+        ksort($allPackages);
+
+        return $allPackages;
+    }
+
+    private function processComposerPackagesInformation($composerPackages, $isDev = false)
+    {
+        $packages = array();
+        foreach ($composerPackages as $packageConfig) {
             $package = array();
+            $package['is_dev'] = $isDev;
             foreach (array('name', 'description', 'version', 'license', 'homepage', 'type', 'source') as $key) {
                 $package[$key] = isset($packageConfig[$key]) ? $packageConfig[$key] : '';
             }
 
-            $packages[] = $package;
+            $packages[$package['name']] = $package;
         }
 
         return $packages;
+    }
+
+    private function getProjectScore($params)
+    {
+        $score = 0;
+
+        $score += 5 * count($params['routes']);
+        $score += 10 * count($params['services']);
+        foreach ($params['packages'] as $package) {
+            $score += $package['is_dev'] ? 25 : 50;
+        }
+
+        return $score;
     }
 }

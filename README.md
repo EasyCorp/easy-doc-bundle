@@ -1,8 +1,6 @@
 EasyDoc
 =======
 
-# THIS IS AN EXPERIMENTAL PROOF OF CONCEPT - ISSUES PROPOSING IDEAS ARE WELCOME ... BUT WE CAN'T ACCEPT PULL REQUESTS YET.
-
 This bundle generates the formal documentation for Symfony applications. This
 documentation is a HTML document that contains detailed information about every
 application element (routes, services, events, configuration, etc.)
@@ -13,9 +11,9 @@ When would this bundle be useful?
   * As a document to get an overall idea of the application when adding new
     developers to the project.
   * As a deliverable to the client who paid for the application development.
-  * As an *searchable* archive of legacy applications.
+  * As a *searchable* archive of legacy applications.
 
-This is how it looks (it's just a very early proof-of-concept design):
+This is how it looks:
 
 ![EasyDoc in action](/src/Resources/doc/images/easydoc-index.png)
 

@@ -1,0 +1,62 @@
+<h1 class="page-title">Services</h1>
+{% for service in services %}
+    <table id="service-{{ service.id }}" class="table">
+        <thead>
+            <tr>
+                <th colspan="2">
+                    <h3 class="anchored" id="service-{{ service.id }}">
+                        {{ service.id }}
+                    </h3>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>PHP class</th> <td>{{ service.class }}</td>
+            </tr>
+            <tr>
+                <th>Features</th>
+                <td>
+                    <b>Public?</b> <span>{{ service.public }}</span>
+                    <b>Shared?</b> <span>{{ service.shared }}</span>
+                    <b>Synthetic?</b> <span>{{ service.synthetic }}</span>
+                    <b>Lazy?</b> <span>{{ service.lazy }}</span>
+                    <b>Abstract?</b> <span>{{ service.abstract }}</span>
+                </td>
+            </tr>
+            <tr>
+                <th>Tags</th>
+                <td>
+                    {% for tagName, tagData in service.tags %}
+                        <b>{{ tagName }}</b>
+                        {% for tagAttributes in tagData %}
+                            <ul>
+                                {% for key, value in tagAttributes %}
+                                    <li><b>{{ key }}</b>: {{ value|join(', ') }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endfor %}
+                    {% else %}
+                        -
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Method calls</th>
+                <td>
+                    {% for call in service.method_calls %}
+                        <b>{{ call[0] }}</b>(...) <br>
+                    {% else %}
+                        -
+                    {% endfor %}
+                </td>
+            </tr>
+            <tr>
+                <th>Factory Service</th>
+                <td>
+                    {{ service.factory|length ? (service.factory[0].class ?? service.factory[0]) ~ '::' ~ service.factory[1] ~ '()' ?? 'n/a' }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endfor %}
