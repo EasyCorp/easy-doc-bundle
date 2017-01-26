@@ -1,0 +1,34 @@
+<h1 class="page-title">Bundles</h1>
+<p>These are the Symfony bundles used by your application.</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Path</th>
+            <th class="text-right">Files</th>
+            <th class="text-right">Size</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for bundle in bundles %}
+            <tr>
+                <td>
+                    <span data-toggle="tooltip" data-placement="top" title="Namespace: {{ bundle.namespace }}">{{ bundle.name }}</span>
+                    {% if bundle.parent %}
+                        <small class="d-block mt-1"><b>Parent</b>: {{ bundle.parent }}</small>
+                    {% endif %}
+                </td>
+                <td>{{ bundle.path }}</td>
+                <td class="text-right">{{ bundle.num_files|number_format }}</td>
+                <td class="text-right">
+                    {% if bundle.size > 1024 ** 2 %}
+                        <span class="nowrap">{{ (bundle.size / (1024 ** 2))|number_format(2) }} MB</span>
+                    {% else %}
+                        <span class="nowrap">{{ (bundle.size / 1024)|number_format(0) }} KB</span>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
