@@ -8,6 +8,9 @@
             display: flex;
             font-size: 14px;
         }
+
+        .nowrap { white-space: pre; }
+
         .navbar {
             background-color: #444;
         }
@@ -133,6 +136,7 @@
             <a class="nav-link" href="#templates">Templates</a>
             <a class="nav-link" href="#doctrine">Doctrine Entities</a>
             <a class="nav-link" href="#configuration">Configuration</a>
+            <a class="nav-link" href="#bundles">Bundles</a>
             <a class="nav-link" href="#licenses">Licenses</a>
         </nav>
     </aside>
@@ -179,6 +183,10 @@
         <section id="configuration">
             <h1 class="page-title">Configuration</h1>
             {{ include('@EasyDoc/_unfinished_panel.html.twig') }}
+        </section>
+
+        <section id="bundles">
+            {{ include('@EasyDoc/_bundles.html.twig') }}
         </section>
 
         <section id="licenses">
