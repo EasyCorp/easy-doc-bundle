@@ -44,5 +44,6 @@
 <div class="card-deck">
     {{ macros.metric(routes|length, 'routes') }}
     {{ macros.metric(services|length, 'services') }}
+    {{ macros.metric(bundles|length, 'bundles') }}
     {{ macros.metric(packages|length, 'dependencies') }}
 </div>

@@ -3,11 +3,12 @@
 namespace EasyCorp\Bundle\EasyDocBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
-use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 class DocCommand extends ContainerAwareCommand
 {
@@ -26,6 +27,7 @@ class DocCommand extends ContainerAwareCommand
         $params['routes'] = $this->getRoutes();
         $params['services'] = $this->getServices();
         $params['packages'] = $this->getPackages();
+        $params['bundles'] = $this->getBundles();
         $params['project_score'] = $this->getProjectScore($params);
         $params['last_build_date'] = new \DateTime();
 
@@ -129,6 +131,31 @@ class DocCommand extends ContainerAwareCommand
         return $allPackages;
     }
 
+    private function getBundles()
+    {
+        $bundles = array();
+        $rootDir = realpath($this->getContainer()->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR;
+
+        foreach ($this->getContainer()->get('kernel')->getBundles() as $bundleName => $bundleObject) {
+            $bundle = array(
+                'name' => $bundleObject->getName(),
+                'parent' => $bundleObject->getParent(),
+                'namespace' => $bundleObject->getNamespace(),
+                'path' => str_replace($rootDir, '', $bundleObject->getPath()),
+            );
+
+            $stats = $this->getBundleDirSize($bundleObject);
+            $bundle['num_files'] = $stats['num_files'];
+            $bundle['size'] = $stats['size'];
+
+            $bundles[$bundleObject->getName()] = $bundle;
+        }
+
+        ksort($bundles);
+
+        return $bundles;
+    }
+
     private function processComposerPackagesInformation($composerPackages, $isDev = false)
     {
         $packages = array();
@@ -145,6 +172,24 @@ class DocCommand extends ContainerAwareCommand
         return $packages;
     }
 
+    private function getBundleDirSize(BundleInterface $bundle)
+    {
+        $dirSize = 0;
+        $numFiles = 0;
+        $dirItems = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($bundle->getPath()));
+        foreach ($dirItems as $item) {
+            if ($item->isFile()) {
+                $dirSize += $item->getSize();
+                $numFiles++;
+            }
+        }
+
+        return array(
+            'num_files' => $numFiles,
+            'size' => $dirSize,
+        );
+    }
+
     private function getProjectScore($params)
     {
         $score = 0;
@@ -153,6 +198,9 @@ class DocCommand extends ContainerAwareCommand
         $score += 10 * count($params['services']);
         foreach ($params['packages'] as $package) {
             $score += $package['is_dev'] ? 25 : 50;
+        }
+        foreach ($params['bundles'] as $bundle) {
+            $score += 'vendor/' === substr($bundle['path'], 0, 7) ? 25 : 100;
         }
 
         return $score;
