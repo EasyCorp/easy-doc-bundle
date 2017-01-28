@@ -7,11 +7,12 @@
         body {
             display: flex;
             font-size: 14px;
+            position: relative;
         }
 
         .nowrap { white-space: pre; }
 
-        .navbar {
+        .navbar-top {
             background-color: #444;
         }
         .navbar-brand {
@@ -28,7 +29,7 @@
             overflow-y: auto;
             flex: 0 0 180px;
         }
-        aside nav {
+        aside .navbar {
             position: fixed;
             top: 60px;
         }
@@ -37,7 +38,6 @@
         }
         article {
             margin-left: 30px;
-            position: relative; /* needed for 'scroll spy' */
             flex: 0 0 960px;
         }
         article section {
@@ -117,31 +117,34 @@
         .card-score .card-title { font-size: 3.5rem; }
         .card-score .card-text { font-size: 1rem; }
         .card-score .card-text a { font-size: .8rem; }
+        .nav-link.active { color: red!important; }
     </style>
     <script>{{ source('@EasyDoc/assets/all.js') }}</script>
 </head>
-<body>
-    <nav class="navbar fixed-top">
+<body data-spy="scroll" data-target="#scrollspy-nav" data-offset="0">
+    <nav class="navbar navbar-top fixed-top">
         <h1 class="navbar-brand">{{ project_name }}</h1>
     </nav>
 
     <aside>
-        <nav class="nav flex-column">
-            <a class="nav-link" href="#overview">Project Overview</a>
-            <a class="nav-link" href="#routes">Routes</a>
-            <a class="nav-link" href="#services">Services</a>
-            <a class="nav-link" href="#events">Events</a>
-            <a class="nav-link" href="#security">Security</a>
-            <a class="nav-link" href="#translation">Internationalization</a>
-            <a class="nav-link" href="#templates">Templates</a>
-            <a class="nav-link" href="#doctrine">Doctrine Entities</a>
-            <a class="nav-link" href="#configuration">Configuration</a>
-            <a class="nav-link" href="#bundles">Bundles</a>
-            <a class="nav-link" href="#licenses">Licenses</a>
+        <nav id="scrollspy-nav" class="navbar navbar-default">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link" href="#overview">Project Overview</a></li>
+                <li class="nav-item"><a class="nav-link" href="#routes">Routes</a></li>
+                <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
+                <li class="nav-item"><a class="nav-link" href="#translation">Internationalization</a></li>
+                <li class="nav-item"><a class="nav-link" href="#templates">Templates</a></li>
+                <li class="nav-item"><a class="nav-link" href="#doctrine">Doctrine Entities</a></li>
+                <li class="nav-item"><a class="nav-link" href="#configuration">Configuration</a></li>
+                <li class="nav-item"><a class="nav-link" href="#bundles">Bundles</a></li>
+                <li class="nav-item"><a class="nav-link" href="#licenses">Licenses</a></li>
+            </ul>
         </nav>
     </aside>
 
-    <article data-spy="scroll" data-target="aside" data-offset="0">
+    <article>
         <section id="overview">
             <h1 class="page-title">Project Overview</h1>
             {{ include('@EasyDoc/_overview.html.twig') }}
