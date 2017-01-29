@@ -30,12 +30,17 @@
             flex: 0 0 180px;
         }
         aside .navbar {
+            margin-top: 15px;
+            padding: 0;
             position: fixed;
-            top: 60px;
+            top: 48px;
+            width: 180px;
         }
         aside .nav-link {
             color: #292b2c;
         }
+        aside .nav-link:hover { background: rgba(0, 0, 0, 0.05); }
+        aside .nav-link.active { font-weight: bold; background: rgba(0, 0, 0, 0.1); }
         article {
             margin-left: 30px;
             flex: 0 0 960px;
@@ -117,27 +122,26 @@
         .card-score .card-title { font-size: 3.5rem; }
         .card-score .card-text { font-size: 1rem; }
         .card-score .card-text a { font-size: .8rem; }
-        .nav-link.active { color: red!important; }
     </style>
     <script>{{ source('@EasyDoc/assets/all.js') }}</script>
 </head>
-<body data-spy="scroll" data-target="#scrollspy-nav" data-offset="0">
+<body data-spy="scroll" data-target=".main-menu" data-offset="0">
     <nav class="navbar navbar-top fixed-top">
         <h1 class="navbar-brand">{{ project_name }}</h1>
     </nav>
 
     <aside>
-        <nav id="scrollspy-nav" class="navbar navbar-default">
+        <nav class="navbar navbar-default main-menu">
             <ul class="nav flex-column">
                 <li class="nav-item"><a class="nav-link" href="#overview">Project Overview</a></li>
                 <li class="nav-item"><a class="nav-link" href="#routes">Routes</a></li>
                 <li class="nav-item"><a class="nav-link" href="#services">Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="#events">Events</a></li>
-                <li class="nav-item"><a class="nav-link" href="#security">Security</a></li>
-                <li class="nav-item"><a class="nav-link" href="#translation">Internationalization</a></li>
-                <li class="nav-item"><a class="nav-link" href="#templates">Templates</a></li>
-                <li class="nav-item"><a class="nav-link" href="#doctrine">Doctrine Entities</a></li>
-                <li class="nav-item"><a class="nav-link" href="#configuration">Configuration</a></li>
+                {# <li class="nav-item"><a class="nav-link" href="#events">Events</a></li> #}
+                {# <li class="nav-item"><a class="nav-link" href="#security">Security</a></li> #}
+                {# <li class="nav-item"><a class="nav-link" href="#translation">Internationalization</a></li> #}
+                {# <li class="nav-item"><a class="nav-link" href="#templates">Templates</a></li> #}
+                {# <li class="nav-item"><a class="nav-link" href="#doctrine">Doctrine Entities</a></li> #}
+                {# <li class="nav-item"><a class="nav-link" href="#configuration">Configuration</a></li> #}
                 <li class="nav-item"><a class="nav-link" href="#bundles">Bundles</a></li>
                 <li class="nav-item"><a class="nav-link" href="#licenses">Licenses</a></li>
             </ul>
