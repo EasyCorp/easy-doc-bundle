@@ -1,65 +1,71 @@
 <h1 class="page-title">Routes</h1>
+<p>These are the routes defined in the Symfony application.</p>
 
-{% for route in routes %}
-    <table id="route-{{ route.name }}" class="table">
-        <thead>
-            <tr>
-                <th colspan="2">
-                    <h3 class="anchored" id="route-{{ route.name }}">
-                        {{ route.name }}
-                    </h3>
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th rowspan="2">Path</th>
-                <td>{{ route.path }}</td>
-            </tr>
-            <tr>
-                <td><b>RegExp.</b> {{ route.path_regex }}</td>
-            </tr>
-            <tr>
-                <th rowspan="{{ route.host_regex ? '2' : '1' }}">Host</th>
-                <td>{{ route.host }}</td>
-            </tr>
-            {% if route.host_regex %}
-            <tr>
-                <td><b>Host RegExp.</b> {{ route.host_regex }}</td>
-            </tr>
-            {% endif %}
-            <tr>
-                <th>HTTP Methods</th> <td>
+<div class="list-group">
+    <div class="list-group-item list-group-header">
+        <div class="d-flex w-100 justify-content-between">
+            <div class="path">Route Path</div>
+            <div class="name">Route Name</div>
+        </div>
+    </div>
+
+    {% for route in routes %}
+        <a class="list-group-item flex-column align-items-start route" data-toggle="collapse" href="#route-{{ route.name }}">
+            <div class="d-flex w-100 justify-content-between">
+                <div class="path">
                     {% for method in route.http_methods %}
-                        <span class="badge">{{ method }}</span>
+                        <span class="badge badge-{{ method|lower }}">{{ method }}</span>
                     {% else %}
-                        (any)
+                        <span class="badge" data-toggle="tooltip" data-placement="top" title="This route responds to any HTTP method">ANY</span>
                     {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th>HTTP Schemes</th> <td>
-                    {% for scheme in route.http_schemes %}
-                        <span class="badge">{{ scheme }}</span>
-                    {% else %}
-                        (any)
-                    {% endfor %}
-                </td>
-            </tr>
-            <tr>
-                <th>Defaults</th> <td>
-                    <ul class="unstyled">
-                    {% for key, value in route.defaults %}
-                        <li><b>{{ key }}</b>: {{ value }}</li>
-                    {% else %}
-                        (none)
-                    {% endfor %}
-                    </ul>
-                </td>
-            </tr>
-            <tr>
-                <th>PHP Class</th> <td>{{ route.php_class }}</td>
-            </tr>
-        </tbody>
-    </table>
-{% endfor %}
+                    {{ route.path }}
+                </div>
+                <div class="name">{{ route.name }}</div>
+            </div>
+        </a>
+
+        <div class="collapse" id="route-{{ route.name }}">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Path RegExp.</th>
+                        <td>{{ route.path_regex }}</td>
+                    </tr>
+                    <tr>
+                        <th rowspan="{{ route.host_regex ? '2' : '1' }}">Host</th>
+                        <td>{{ route.host }}</td>
+                    </tr>
+                    {% if route.host_regex %}
+                    <tr>
+                        <td><b>Host RegExp.</b> {{ route.host_regex }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <th>HTTP Schemes</th> <td>
+                            {% for scheme in route.http_schemes %}
+                                <span class="badge">{{ scheme }}</span>
+                            {% else %}
+                                (any)
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Defaults</th> <td>
+                            <ul class="unstyled">
+                            {% for key, value in route.defaults %}
+                                <li><b>{{ key }}</b>: {{ value }}</li>
+                            {% else %}
+                                (none)
+                            {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>PHP Class</th> <td>{{ route.php_class }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+    </div>
+</div>
