@@ -79,7 +79,11 @@ class DocCommand extends ContainerAwareCommand
             //$route['requirements'] = $routeObject->getRequirements() ?: '(none)',
             //$route['options'] = $this->formatRouterConfig($route->getOptions();
 
-            $routes[] = $route;
+            if (in_array($name, $this->getSymfonyBuiltInRouteNames())) {
+                $routes['symfony'][] = $route;
+            } else {
+                $routes['application'][] = $route;
+            }
         }
 
         return $routes;
@@ -170,6 +174,25 @@ class DocCommand extends ContainerAwareCommand
         }
 
         return $packages;
+    }
+
+    private function getSymfonyBuiltInRouteNames()
+    {
+        return array(
+            '_profiler',
+            '_profiler_exception',
+            '_profiler_exception_css',
+            '_profiler_home',
+            '_profiler_info',
+            '_profiler_open_file',
+            '_profiler_phpinfo',
+            '_profiler_router',
+            '_profiler_search',
+            '_profiler_search_bar',
+            '_profiler_search_results',
+            '_twig_error_test',
+            '_wdt',
+        );
     }
 
     private function getBundleDirSize(BundleInterface $bundle)

@@ -1,71 +1,93 @@
-<h1 class="page-title">Routes</h1>
-<p>These are the routes defined in the Symfony application.</p>
-
-<div class="list-group">
-    <div class="list-group-item list-group-header">
-        <div class="d-flex w-100 justify-content-between">
-            <div class="path">Route Path</div>
-            <div class="name">Route Name</div>
+{% macro route_list(routes) %}
+    <div class="list-group">
+        <div class="list-group-item list-group-header">
+            <div class="d-flex w-100 justify-content-between">
+                <div class="path">Route Path</div>
+                <div class="name">Route Name</div>
+            </div>
         </div>
+
+        {% for route in routes %}
+            <a class="list-group-item flex-column align-items-start route" data-toggle="collapse" href="#route-{{ route.name }}">
+                <div class="d-flex w-100 justify-content-between">
+                    <div class="path">
+                        {% for method in route.http_methods %}
+                            <span class="badge badge-{{ method|lower }}">{{ method }}</span>
+                        {% else %}
+                            <span class="badge badge-outline" data-toggle="tooltip" data-placement="top" title="This route responds to any HTTP method">ANY</span>
+                        {% endfor %}
+                        {{ route.path }}
+                    </div>
+                    <div class="name">{{ route.name }}</div>
+                </div>
+            </a>
+
+            <div class="collapse" id="route-{{ route.name }}">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Path RegExp.</th>
+                            <td>{{ route.path_regex }}</td>
+                        </tr>
+                        <tr>
+                            <th rowspan="{{ route.host_regex ? '2' : '1' }}">Host</th>
+                            <td>{{ route.host }}</td>
+                        </tr>
+                        {% if route.host_regex %}
+                        <tr>
+                            <td><b>Host RegExp.</b> {{ route.host_regex }}</td>
+                        </tr>
+                        {% endif %}
+                        <tr>
+                            <th>HTTP Schemes</th> <td>
+                                {% for scheme in route.http_schemes %}
+                                    <span class="badge">{{ scheme }}</span>
+                                {% else %}
+                                    (any)
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Defaults</th> <td>
+                                <ul class="unstyled">
+                                {% for key, value in route.defaults %}
+                                    <li><b>{{ key }}</b>: {{ value }}</li>
+                                {% else %}
+                                    (none)
+                                {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>PHP Class</th> <td>{{ route.php_class }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}
+{% import _self as macros %}
+
+<h1 class="page-title">Routes</h1>
+
+<ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#routes-application" role="tab">Application Routes</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#routes-symfony" role="tab">Symfony Routes</a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="routes-application" role="tabpanel">
+        <p>These are the routes defined by the application and third-party bundles.</p>
+        {{ macros.route_list(routes.application) }}
     </div>
 
-    {% for route in routes %}
-        <a class="list-group-item flex-column align-items-start route" data-toggle="collapse" href="#route-{{ route.name }}">
-            <div class="d-flex w-100 justify-content-between">
-                <div class="path">
-                    {% for method in route.http_methods %}
-                        <span class="badge badge-{{ method|lower }}">{{ method }}</span>
-                    {% else %}
-                        <span class="badge badge-outline" data-toggle="tooltip" data-placement="top" title="This route responds to any HTTP method">ANY</span>
-                    {% endfor %}
-                    {{ route.path }}
-                </div>
-                <div class="name">{{ route.name }}</div>
-            </div>
-        </a>
-
-        <div class="collapse" id="route-{{ route.name }}">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <th>Path RegExp.</th>
-                        <td>{{ route.path_regex }}</td>
-                    </tr>
-                    <tr>
-                        <th rowspan="{{ route.host_regex ? '2' : '1' }}">Host</th>
-                        <td>{{ route.host }}</td>
-                    </tr>
-                    {% if route.host_regex %}
-                    <tr>
-                        <td><b>Host RegExp.</b> {{ route.host_regex }}</td>
-                    </tr>
-                    {% endif %}
-                    <tr>
-                        <th>HTTP Schemes</th> <td>
-                            {% for scheme in route.http_schemes %}
-                                <span class="badge">{{ scheme }}</span>
-                            {% else %}
-                                (any)
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>Defaults</th> <td>
-                            <ul class="unstyled">
-                            {% for key, value in route.defaults %}
-                                <li><b>{{ key }}</b>: {{ value }}</li>
-                            {% else %}
-                                (none)
-                            {% endfor %}
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>PHP Class</th> <td>{{ route.php_class }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    {% endfor %}
+    <div class="tab-pane" id="routes-symfony" role="tabpanel">
+        <p>These are the routes defined by the built-in Symfony bundles and components.</p>
+        {{ macros.route_list(routes.symfony) }}
     </div>
 </div>

@@ -59,13 +59,11 @@
         }
 
         h1.page-title {
-            border-bottom: 1px solid #ddd;
             color: #444;
             font-size: 1.5rem;
             font-weight: 500;
             margin-bottom: 15px;
             margin-top: 15px;
-            padding-bottom: 5px;
         }
 
         ul.unstyled { list-style: none; padding-left: 0; }
@@ -137,6 +135,8 @@
         .list-group .table th { padding-left: .75rem; }
         .list-group .table tr:last-child td,
         .list-group .table tr:last-child th { border-bottom: 0; }
+
+        .tab-pane p { margin: 1rem 0; }
 
         /* Routes panel */
         .route .name { color: #292b2c; }
@@ -231,6 +231,7 @@
 
     <script>
         $(function () {
+            anchors.add('.anchored');
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
