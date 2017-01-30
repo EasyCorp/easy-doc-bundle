@@ -59,17 +59,16 @@
         }
 
         h1.page-title {
-            border-bottom: 1px solid #ddd;
             color: #444;
             font-size: 1.5rem;
             font-weight: 500;
             margin-bottom: 15px;
             margin-top: 15px;
-            padding-bottom: 5px;
         }
 
         ul.unstyled { list-style: none; padding-left: 0; }
 
+        .table th { color: #444; }
         .table thead th,
         .table td, .table th {
             border: 1px solid #ddd;
@@ -87,17 +86,9 @@
         .table tbody td span + b { margin-left: 1rem; }
         .table tbody td ul + b { display: inline-block; margin-top: 1rem; }
 
-        .badge {
-            color: #999;
-            display: inline-block;
-            border: 2px solid #ccc;
-            font-weight: 500;
-            min-width: 47px;
-            padding: 3px 6px;
-        }
-        .badge-prod {
-            border-color: #5cb85c;
-            color: #5cb85c;
+        .list-group-header {
+            background-color: #fafafa;
+            font-weight: bold;
         }
 
         .blankslate {
@@ -122,10 +113,42 @@
         .card-score .card-title { font-size: 3.5rem; }
         .card-score .card-text { font-size: 1rem; }
         .card-score .card-text a { font-size: .8rem; }
+
+        .badge {
+            background: #eee;
+            border-radius: 2px;
+            color: #777;
+            display: inline-block;
+            font-weight: bold;
+            padding: 4px;
+        }
+        .badge-outline { background-color: #fff; border: 2px solid #eee; }
+        .badge-prod {
+            border-color: #5cb85c;
+            color: #5cb85c;
+        }
+
+        .list-group-item { padding: .75rem; }
+        a.list-group-item:hover { background-color: #fff9ea; }
+        .list-group-header.list-group-item { border-bottom-width: 2px; padding: .5rem .75rem; }
+        .list-group .table { margin-bottom: 0; }
+        .list-group .table th { padding-left: .75rem; }
+        .list-group .table tr:last-child td,
+        .list-group .table tr:last-child th { border-bottom: 0; }
+
+        .tab-pane p { margin: 1rem 0; }
+
+        /* Routes panel */
+        .route .name { color: #292b2c; }
+        .route .path .badge:last-child { margin-right: 5px; }
+
+        .badge-get, .badge-head, .badge-options { background-color: #709c8d; color: #FFF; }
+        .badge-post, .badge-put, .badge-patch { background-color: #72809d; color: #FFF; }
+        .badge-delete { background-color: #9d7280; color: #FFF; }
     </style>
     <script>{{ source('@EasyDoc/assets/all.js') }}</script>
 </head>
-<body data-spy="scroll" data-target=".main-menu" data-offset="0">
+<body data-spy="scroll" data-target=".main-menu" data-offset="200">
     <nav class="navbar navbar-top fixed-top">
         <h1 class="navbar-brand">{{ project_name }}</h1>
     </nav>
@@ -208,6 +231,7 @@
 
     <script>
         $(function () {
+            anchors.add('.anchored');
             $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
