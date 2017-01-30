@@ -16,7 +16,7 @@
                     {% for method in route.http_methods %}
                         <span class="badge badge-{{ method|lower }}">{{ method }}</span>
                     {% else %}
-                        <span class="badge" data-toggle="tooltip" data-placement="top" title="This route responds to any HTTP method">ANY</span>
+                        <span class="badge badge-outline" data-toggle="tooltip" data-placement="top" title="This route responds to any HTTP method">ANY</span>
                     {% endfor %}
                     {{ route.path }}
                 </div>

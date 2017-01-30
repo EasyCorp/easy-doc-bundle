@@ -70,6 +70,7 @@
 
         ul.unstyled { list-style: none; padding-left: 0; }
 
+        .table th { color: #444; }
         .table thead th,
         .table td, .table th {
             border: 1px solid #ddd;
@@ -115,30 +116,35 @@
         .card-score .card-text { font-size: 1rem; }
         .card-score .card-text a { font-size: .8rem; }
 
-        .list-group .table { margin-bottom: 0; }
-        .list-group .table th { padding-left: 1.25rem; }
-        .list-group .table tr:last-child td,
-        .list-group .table tr:last-child th { border-bottom: 0; }
-
         .badge {
-            border: 2px solid #eee;
+            background: #eee;
+            border-radius: 2px;
             color: #777;
             display: inline-block;
             font-weight: bold;
             padding: 4px;
         }
+        .badge-outline { background-color: #fff; border: 2px solid #eee; }
         .badge-prod {
             border-color: #5cb85c;
             color: #5cb85c;
         }
 
+        .list-group-item { padding: .75rem; }
+        a.list-group-item:hover { background-color: #fff9ea; }
+        .list-group-header.list-group-item { border-bottom-width: 2px; padding: .5rem .75rem; }
+        .list-group .table { margin-bottom: 0; }
+        .list-group .table th { padding-left: .75rem; }
+        .list-group .table tr:last-child td,
+        .list-group .table tr:last-child th { border-bottom: 0; }
+
         /* Routes panel */
         .route .name { color: #292b2c; }
         .route .path .badge:last-child { margin-right: 5px; }
 
-        .badge-get, .badge-head, .badge-options { color: #4078c0; ccolor: #FFF; }
-        .badge-post, .badge-put, .badge-patch { color: #c9510c; ccolor: #FFF; }
-        .badge-delete { color: #bd2c00; ccolor: #FFF; }
+        .badge-get, .badge-head, .badge-options { background-color: #709c8d; color: #FFF; }
+        .badge-post, .badge-put, .badge-patch { background-color: #72809d; color: #FFF; }
+        .badge-delete { background-color: #9d7280; color: #FFF; }
     </style>
     <script>{{ source('@EasyDoc/assets/all.js') }}</script>
 </head>
