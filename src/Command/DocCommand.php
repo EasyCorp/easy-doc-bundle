@@ -217,7 +217,8 @@ class DocCommand extends ContainerAwareCommand
     {
         $score = 0;
 
-        $score += 5 * count($params['routes']);
+        $score += 1 * count($params['routes']['symfony']);
+        $score += 5 * count($params['routes']['application']);
         $score += 10 * count($params['services']);
         foreach ($params['packages'] as $package) {
             $score += $package['is_dev'] ? 25 : 50;
