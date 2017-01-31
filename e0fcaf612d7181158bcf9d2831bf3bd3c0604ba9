@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by fatihkahveci at 2017-01-30T08:39:17Z
+
+This is will be more useful 👍
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2017-01-30T21:19:12Z
+
+The updated design now divides routes into internal Symfony routes and application routes:
+
+![route-panel](https://cloud.githubusercontent.com/assets/73419/22442023/10462b06-e73a-11e6-8045-e8737242f1d6.png)
+
+In action:
+
+![route-panel](https://cloud.githubusercontent.com/assets/73419/22442027/14675caa-e73a-11e6-93ea-cbb57502d4eb.gif)
