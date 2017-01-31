@@ -166,7 +166,7 @@ class DocCommand extends ContainerAwareCommand
         foreach ($composerPackages as $packageConfig) {
             $package = array();
             $package['is_dev'] = $isDev;
-            foreach (array('name', 'description', 'version', 'license', 'homepage', 'type', 'source') as $key) {
+            foreach (array('name', 'description', 'keywords', 'authors', 'version', 'license', 'homepage', 'type', 'source', 'bin', 'autoload', 'time') as $key) {
                 $package[$key] = isset($packageConfig[$key]) ? $packageConfig[$key] : '';
             }
 
