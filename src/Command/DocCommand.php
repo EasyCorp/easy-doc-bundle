@@ -79,7 +79,11 @@ class DocCommand extends ContainerAwareCommand
             //$route['requirements'] = $routeObject->getRequirements() ?: '(none)',
             //$route['options'] = $this->formatRouterConfig($route->getOptions();
 
-            $routes[] = $route;
+            if (in_array($name, $this->getSymfonyBuiltInRouteNames())) {
+                $routes['symfony'][] = $route;
+            } else {
+                $routes['application'][] = $route;
+            }
         }
 
         return $routes;
@@ -172,6 +176,25 @@ class DocCommand extends ContainerAwareCommand
         return $packages;
     }
 
+    private function getSymfonyBuiltInRouteNames()
+    {
+        return array(
+            '_profiler',
+            '_profiler_exception',
+            '_profiler_exception_css',
+            '_profiler_home',
+            '_profiler_info',
+            '_profiler_open_file',
+            '_profiler_phpinfo',
+            '_profiler_router',
+            '_profiler_search',
+            '_profiler_search_bar',
+            '_profiler_search_results',
+            '_twig_error_test',
+            '_wdt',
+        );
+    }
+
     private function getBundleDirSize(BundleInterface $bundle)
     {
         $dirSize = 0;
@@ -194,7 +217,8 @@ class DocCommand extends ContainerAwareCommand
     {
         $score = 0;
 
-        $score += 5 * count($params['routes']);
+        $score += 1 * count($params['routes']['symfony']);
+        $score += 5 * count($params['routes']['application']);
         $score += 10 * count($params['services']);
         foreach ($params['packages'] as $package) {
             $score += $package['is_dev'] ? 25 : 50;
