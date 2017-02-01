@@ -1,5 +1,129 @@
+{% macro clean_url(url) %}
+    {{ url|replace({
+        'https://': '',
+        'http://': '',
+    })|trim('/') }}
+{% endmacro %}
+{% import _self as macros %}
+
 <h1 class="page-title">Licenses</h1>
-<p>These are the packages used by your application and their licenses.</p>
+<p>These are the packages installed in your application and their licenses.</p>
+
+<div class="list-group">
+    <div class="list-group-item list-group-header">
+        <div class="d-flex w-100 justify-content-between">
+            <div class="path">Package</div>
+            <div class="name">License</div>
+        </div>
+    </div>
+
+    {% for package in packages %}
+        <a class="list-group-item flex-column align-items-start package" data-toggle="collapse" href="#package-{{ package.name|replace({ '/': '-' }) }}">
+            <div class="d-flex w-100 justify-content-between">
+                <div class="name">
+                    <span class="badge badge-{{ package.is_dev ? 'outline' : 'prod' }}">{{ package.is_dev ? 'DEV' : 'PROD' }}</span>
+                    {{ package.name }} <span class="text-muted">{{ package.version }}</span>
+                </div>
+                <div class="license">{{ package.license|join(', ') }}</div>
+            </div>
+        </a>
+
+        <div class="collapse" id="package-{{ package.name|replace({ '/': '-' }) }}">
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Authors</th>
+                        <td>
+                            {% for author in package.authors %}
+                                {{ author.name|default('-') }}{% if not loop.last %},{% endif %}
+                            {% else %}
+                                -
+                            {% endfor %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Description</th>
+                        <td>{{ package.description ?: '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Keywords</th>
+                        <td>{{ package.keywords|join(', ') ?: '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Type</th>
+                        <td>{{ package.type ?: '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Homepage</th>
+                        <td>
+                            {% if package.homepage %}
+                                <a href="{{ package.homepage }}">{{ macros.clean_url(package.homepage) }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Source</th>
+                        <td>
+                            {% if package.source|length > 0 %}
+                                <a href="{{ package.source.url }}">{{ package.source.url }}</a>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Published on</th>
+                        <td>{{ package.time|date }}</td>
+                    </tr>
+                    <tr>
+                        <th>Binaries</th>
+                        <td>
+                            {% if package.bin|length > 0 %}
+                                <ul>
+                                    {% for binary in package.bin %}
+                                        <li>{{ binary }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>PHP autoload</th>
+                        <td>
+                            {% if package.autoload|length > 0 %}
+                                <ul>
+                                    {% for type, autoload in package.autoload if autoload != 'exclude-from-classmap' %}
+                                        <li><b>{{ type }}</b>:
+                                            <ul>
+                                                {% if type in ['psr-0', 'psr-4'] %}
+                                                    {% for namespace, dir in autoload %}
+                                                        <li>{{ namespace }} &rarr; "{{ dir|join('", "') }}"</li>
+                                                    {% endfor %}
+                                                {% endif %}
+
+                                                {% if type in ['classmap', 'files', 'exclude-from-classmap'] %}
+                                                    {% for entry in autoload %}
+                                                        <li>{{ entry }}</li>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    {% endfor %}
+</div>
 
 <table class="table">
     <thead>
