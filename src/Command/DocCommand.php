@@ -17,8 +17,7 @@ class DocCommand extends ContainerAwareCommand
     {
         $this
             ->setName('doc')
-            ->setDescription('Generates the entire documentation of your Symfony application')
-        ;
+            ->setDescription('Generates the entire documentation of your Symfony application');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -30,17 +29,22 @@ class DocCommand extends ContainerAwareCommand
         $params['packages'] = $this->getPackages();
         $params['bundles'] = $this->getBundles();
         $params['entities'] = $this->getEntities();
+        $params['entitiesSummary'] = array_sum(array_map(
+            function ($bundleEntities) {
+                return count($bundleEntities);
+            }, $params['entities']
+        ));
         $params['project_score'] = $this->getProjectScore($params);
         $params['last_build_date'] = new \DateTime();
 
-        $docPath = $this->getContainer()->getParameter('kernel.cache_dir').'/doc.html';
+        $docPath = $this->getContainer()->getParameter('kernel.cache_dir') . '/doc.html';
         file_put_contents($docPath, $this->getContainer()->get('twig')->render('@EasyDoc/doc.html.twig', $params));
         $output->writeln(sprintf('[OK] The documentation was generated in %s', realpath($docPath)));
     }
 
     private function getProjectName()
     {
-        $composerJsonPath = $this->getContainer()->getParameter('kernel.root_dir').'/../composer.json';
+        $composerJsonPath = $this->getContainer()->getParameter('kernel.root_dir') . '/../composer.json';
         if (file_exists($composerJsonPath)) {
             $composerJsonContents = json_decode(file_get_contents($composerJsonPath), true);
             list($vendorName, $projectName) = explode('/', $composerJsonContents['name']);
@@ -62,6 +66,40 @@ class DocCommand extends ContainerAwareCommand
         }
 
         return 'v1.0.0';
+    }
+
+    private function getPackages()
+    {
+        $packages = array();
+
+        $composerLockPath = $this->getContainer()->getParameter('kernel.root_dir') . '/../composer.lock';
+        if (!file_exists($composerLockPath)) {
+            return $packages;
+        }
+
+        $composerLockContents = json_decode(file_get_contents($composerLockPath), true);
+        $prodPackages = $this->processComposerPackagesInformation($composerLockContents['packages']);
+        $devPackages = $this->processComposerPackagesInformation($composerLockContents['packages-dev'], true);
+        $allPackages = array_merge($prodPackages, $devPackages);
+        ksort($allPackages);
+
+        return $allPackages;
+    }
+
+    private function processComposerPackagesInformation($composerPackages, $isDev = false)
+    {
+        $packages = array();
+        foreach ($composerPackages as $packageConfig) {
+            $package = array();
+            $package['is_dev'] = $isDev;
+            foreach (array('name', 'description', 'keywords', 'authors', 'version', 'license', 'homepage', 'type', 'source', 'bin', 'autoload', 'time') as $key) {
+                $package[$key] = isset($packageConfig[$key]) ? $packageConfig[$key] : '';
+            }
+
+            $packages[$package['name']] = $package;
+        }
+
+        return $packages;
     }
 
     private function getRoutes()
@@ -89,6 +127,25 @@ class DocCommand extends ContainerAwareCommand
         }
 
         return $routes;
+    }
+
+    private function getSymfonyBuiltInRouteNames()
+    {
+        return array(
+            '_profiler',
+            '_profiler_exception',
+            '_profiler_exception_css',
+            '_profiler_home',
+            '_profiler_info',
+            '_profiler_open_file',
+            '_profiler_phpinfo',
+            '_profiler_router',
+            '_profiler_search',
+            '_profiler_search_bar',
+            '_profiler_search_results',
+            '_twig_error_test',
+            '_wdt',
+        );
     }
 
     private function getServices()
@@ -119,28 +176,10 @@ class DocCommand extends ContainerAwareCommand
         return $services;
     }
 
-    private function getPackages()
-    {
-        $packages = array();
-
-        $composerLockPath = $this->getContainer()->getParameter('kernel.root_dir').'/../composer.lock';
-        if (!file_exists($composerLockPath)) {
-            return $packages;
-        }
-
-        $composerLockContents = json_decode(file_get_contents($composerLockPath), true);
-        $prodPackages = $this->processComposerPackagesInformation($composerLockContents['packages']);
-        $devPackages = $this->processComposerPackagesInformation($composerLockContents['packages-dev'], true);
-        $allPackages = array_merge($prodPackages, $devPackages);
-        ksort($allPackages);
-
-        return $allPackages;
-    }
-
     private function getBundles()
     {
         $bundles = array();
-        $rootDir = realpath($this->getContainer()->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR;
+        $rootDir = realpath($this->getContainer()->getParameter('kernel.root_dir') . '/..') . DIRECTORY_SEPARATOR;
 
         foreach ($this->getContainer()->get('kernel')->getBundles() as $bundleName => $bundleObject) {
             $bundle = array(
@@ -162,41 +201,6 @@ class DocCommand extends ContainerAwareCommand
         return $bundles;
     }
 
-    private function processComposerPackagesInformation($composerPackages, $isDev = false)
-    {
-        $packages = array();
-        foreach ($composerPackages as $packageConfig) {
-            $package = array();
-            $package['is_dev'] = $isDev;
-            foreach (array('name', 'description', 'keywords', 'authors', 'version', 'license', 'homepage', 'type', 'source', 'bin', 'autoload', 'time') as $key) {
-                $package[$key] = isset($packageConfig[$key]) ? $packageConfig[$key] : '';
-            }
-
-            $packages[$package['name']] = $package;
-        }
-
-        return $packages;
-    }
-
-    private function getSymfonyBuiltInRouteNames()
-    {
-        return array(
-            '_profiler',
-            '_profiler_exception',
-            '_profiler_exception_css',
-            '_profiler_home',
-            '_profiler_info',
-            '_profiler_open_file',
-            '_profiler_phpinfo',
-            '_profiler_router',
-            '_profiler_search',
-            '_profiler_search_bar',
-            '_profiler_search_results',
-            '_twig_error_test',
-            '_wdt',
-        );
-    }
-
     private function getBundleDirSize(BundleInterface $bundle)
     {
         $dirSize = 0;
@@ -215,6 +219,21 @@ class DocCommand extends ContainerAwareCommand
         );
     }
 
+    private function getEntities()
+    {
+        $entities = array();
+        $em = $this->getContainer()->get('doctrine')->getManager();
+
+        $meta = $em->getMetadataFactory()->getAllMetadata();
+        /** @var \Doctrine\ORM\Mapping\ClassMetadata $m */
+        foreach ($meta as $m) {
+            $entities[$m->namespace][] = $m;
+
+        }
+
+        return $entities;
+    }
+
     private function getProjectScore($params)
     {
         $score = 0;
@@ -231,19 +250,5 @@ class DocCommand extends ContainerAwareCommand
         }
 
         return $score;
-    }
-
-    private function getEntities()
-    {
-        $entities = array();
-        $em = $this->getContainer()->get('doctrine')->getManager();
-
-        $meta = $em->getMetadataFactory()->getAllMetadata();
-        /** @var \Doctrine\ORM\Mapping\ClassMetadata $m */
-        foreach ($meta as $m) {
-            $entities[$m->namespace][] = $m;
-        }
-
-        return $entities;
     }
 }
