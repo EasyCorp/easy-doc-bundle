@@ -33,7 +33,7 @@
                         <tbody>
                         {% for fieldname, field in entity.reflFields %}
                             <tr>
-                                <td{% if fieldname in entity.fieldMappings|keys %} title="{{ 'Column name'|trans }}: {{ entity.fieldMappings[fieldname].columnName }}"{% endif %}>
+                                <td>
                                     {% if fieldname in entity.identifier %}
                                         <strong title="{{ 'Primary Key'|trans }}">{{ fieldname }}</strong>
                                     {% else %}
@@ -42,6 +42,7 @@
                                 </td>
                                 {% if fieldname in entity.fieldMappings|keys %}
                                     <td>
+                                        <i>`{{ entity.fieldMappings[fieldname].columnName }}`</i>,
                                         {{ entity.fieldMappings[fieldname].type }},
                                         {{ entity.fieldMappings[fieldname].length is defined and entity.fieldMappings[fieldname].length ? entity.fieldMappings[fieldname].length ~ ', ' : '' }}
                                         {{ entity.fieldMappings[fieldname].nullable is defined and entity.fieldMappings[fieldname].nullable ? 'nullable'|trans : 'not null'|trans }}
