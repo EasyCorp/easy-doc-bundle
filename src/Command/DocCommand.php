@@ -23,7 +23,13 @@ class DocCommand extends ContainerAwareCommand
         $this
             ->setName('doc')
             ->setDescription('Generates the entire documentation of your Symfony application')
-            ->addOption('image-path', 'i', InputOption::VALUE_OPTIONAL, 'Optional path to schema with Doctrine entities');
+            ->addOption('out', 'o', InputOption::VALUE_OPTIONAL, 'Path to put generated docs', 'doc.html')
+            ->addOption(
+                'image-path',
+                'i',
+                InputOption::VALUE_OPTIONAL,
+                'Optional path to schema with Doctrine entities'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,7 +53,6 @@ class DocCommand extends ContainerAwareCommand
             }
         }
 
-
         $params['project_name'] = $this->getProjectName();
         $params['easydoc_version'] = $this->getEasyDocVersion();
         $params['routes'] = $this->getRoutes();
@@ -58,12 +63,13 @@ class DocCommand extends ContainerAwareCommand
         $params['entitiesSummary'] = array_sum(array_map(
             function ($bundleEntities) {
                 return count($bundleEntities);
-            }, $params['entities']
+            },
+            $params['entities']
         ));
         $params['project_score'] = $this->getProjectScore($params);
         $params['last_build_date'] = new \DateTime();
 
-        $docPath = $this->getContainer()->getParameter('kernel.cache_dir') . '/doc.html';
+        $docPath = $input->getOption('out');
         file_put_contents($docPath, $this->getContainer()->get('twig')->render('@EasyDoc/doc.html.twig', $params));
         $output->writeln(sprintf('[OK] The documentation was generated in %s', realpath($docPath)));
     }
