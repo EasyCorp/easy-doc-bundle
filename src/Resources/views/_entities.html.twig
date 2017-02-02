@@ -47,7 +47,7 @@
                                         {{ entity.fieldMappings[fieldname].length is defined and entity.fieldMappings[fieldname].length ? entity.fieldMappings[fieldname].length ~ ', ' : '' }}
                                         {{ entity.fieldMappings[fieldname].nullable is defined and entity.fieldMappings[fieldname].nullable ? 'nullable'|trans : 'not null'|trans }}
                                         ,
-                                        {{ (entity.fieldMappings[fieldname].unique is defined or
+                                        {{ (entity.fieldMappings[fieldname].unique is defined and entity.fieldMappings[fieldname].unique or
                                         entity.fieldMappings[fieldname].id is defined and entity.identifier|length == 1 ) ? 'unique'|trans : 'not unique'|trans }}{% if entity.fieldMappings[fieldname].type in ['float', 'decimal'] %},
                                             {{ 'scale'|trans }}: {{ entity.fieldMappings[fieldname].scale }},
                                             {{ 'precision'|trans }}:  {{ entity.fieldMappings[fieldname].precision }}
