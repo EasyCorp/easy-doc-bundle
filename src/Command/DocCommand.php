@@ -2,6 +2,7 @@
 
 namespace EasyCorp\Bundle\EasyDocBundle\Command;
 
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,6 +29,7 @@ class DocCommand extends ContainerAwareCommand
         $params['services'] = $this->getServices();
         $params['packages'] = $this->getPackages();
         $params['bundles'] = $this->getBundles();
+        $params['entities'] = $this->getEntities();
         $params['project_score'] = $this->getProjectScore($params);
         $params['last_build_date'] = new \DateTime();
 
@@ -228,5 +230,19 @@ class DocCommand extends ContainerAwareCommand
         }
 
         return $score;
+    }
+
+    private function getEntities()
+    {
+        $entities = array();
+        $em = $this->getContainer()->get('doctrine')->getManager();
+
+        $meta = $em->getMetadataFactory()->getAllMetadata();
+        /** @var \Doctrine\ORM\Mapping\ClassMetadata $m */
+        foreach ($meta as $m) {
+            $entities[$m->namespace][] = $m;
+        }
+
+        return $entities;
     }
 }
