@@ -1,6 +1,10 @@
 <h1 class="page-title">Doctrine Entities</h1>
 <p>These are all Doctrine entities.</p>
 
+{% if schemaImage is defined %}
+<img src="{{ schemaImage.data }}" title="{{ schemaImage.filename }}">
+{% endif %}
+
 {% for namespace, bundleEntities in entities %}
     <table class="table">
         <thead>

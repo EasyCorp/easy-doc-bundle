@@ -9,19 +9,45 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
 
 class DocCommand extends ContainerAwareCommand
 {
+
     protected function configure()
     {
         $this
             ->setName('doc')
-            ->setDescription('Generates the entire documentation of your Symfony application');
+            ->setDescription('Generates the entire documentation of your Symfony application')
+            ->addOption('image-path', 'i', InputOption::VALUE_OPTIONAL, 'Optional path to schema with Doctrine entities');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $imagePath = $input->getOption('image-path');
+
+        if (null !== $imagePath) {
+            try {
+                $file = new File($imagePath);
+
+                $params['schemaImage'] = [
+                    'filename' => $file->getBasename(),
+                    'data' => sprintf(
+                        'data:%s;base64,%s',
+                        $file->getMimeType(),
+                        base64_encode(file_get_contents($file->getPathname()))
+                    ),
+                ];
+            } catch (FileNotFoundException $exception) {
+                $output->writeln(sprintf('[Error] Wrong schema image path (%s)', $imagePath));
+            }
+        }
+
+
         $params['project_name'] = $this->getProjectName();
         $params['easydoc_version'] = $this->getEasyDocVersion();
         $params['routes'] = $this->getRoutes();
