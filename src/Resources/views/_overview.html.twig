@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-block">
             <h4 class="card-title">{{ value }}</h4>
-            <p class="card-text">{{ title }}</p>
+            <p class="card-text">{{ title|transchoice(value) }}</p>
         </div>
     </div>
 {% endmacro %}
@@ -43,6 +43,7 @@
 
 <div class="card-deck">
     {{ macros.metric(routes|length, 'routes') }}
+    {{ macros.metric(entitiesSummary, 'entities') }}
     {{ macros.metric(services|length, 'services') }}
     {{ macros.metric(bundles|length, 'bundles') }}
     {{ macros.metric(packages|length, 'dependencies') }}
