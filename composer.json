@@ -18,13 +18,16 @@
         "symfony/twig-bridge"           : "^2.3.4|~3.0",
         "symfony/twig-bundle"           : "~2.3|~3.0",
         "twig/extensions"               : "~1.0",
-        "twig/twig"                     : "~1.14,>=1.14.2|~2.0"
+        "twig/twig"                     : "~1.14,>=1.14.2|~2.0",
+        "symfony/console"               : "~2.8|~3.0",
+        "doctrine/doctrine-bundle"      : "~1.4"
+
     },
     "require-dev": {
     },
     "config": {
         "platform": {
-            "php": "5.3.3"
+            "php": "5.3.9"
         },
         "sort-packages": true
     },
